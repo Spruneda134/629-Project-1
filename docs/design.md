@@ -1,4 +1,4 @@
-# Classes
+# Class Design
 
 
 ## Class CategoryTracker
