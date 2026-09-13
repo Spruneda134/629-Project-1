@@ -76,13 +76,11 @@ end
 
 class Activity
 
-    def initialize(name, weight, reps, sets)
+    def initialize(name, metricValue)
+        @sets = []
         @name = name
-        @activityCount = 0
-        @date = Time.now
-        @weight = weight
-        @reps = reps
-        @sets = sets
+        @metricValue = metricValue
+        @setCount = 0
     end
 
     def name()
@@ -93,28 +91,33 @@ class Activity
         @name = new_name
     end
 
-    def weight()
-        @weight
+    def add_set(set)
+        @sets << set
+        @setCount += 1
     end
 
-    def edit_weight(new_weight)
-        @weight = new_weight
+    def view_sets()
+        @sets.each do |set|
+            puts set
+        end
     end
 
-    def reps()
-        @reps
+    def metricValue()
+        @metricValue
     end
 
-    def edit_reps(new_reps)
-        @reps = new_reps
+    def edit_metricValue(new_metricValue)
+        @metricValue = new_metricValue
     end
 
-    def sets()
-        @sets
-    end
+end
 
-    def edit_sets(new_sets)
-        @sets = new_sets
+class Set
+
+    def initialize(weight, reps, rpe)
+        @weight = weight
+        @reps = reps
+        @rpe = rpe
     end
 
 end
