@@ -1,19 +1,11 @@
 require 'main'
 
 RSpec.describe Main do
-  it 'start with an empty app with no sessions' do
-    expect(Main.new.sessions.length).to eq(0)
-  end
-end
+  it 'start app with empty collections (sessions, goals, records)' do
+    main = Main.new
 
-RSpec.describe Main do
-  it 'start with an empty app with no goals' do
-    expect(Main.new.goals.length).to eq(0)
-  end
-end
-
-RSpec.describe Main do
-  it 'start with an empty app with no sessions' do
-    expect(Main.new.sessions.length).to eq(0)
+    expect(main.sessions.length).to eq(0)
+    expect(main.goals.length).to eq(0)
+    expect(main.records.length).to eq(0)
   end
 end

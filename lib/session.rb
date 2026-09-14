@@ -3,12 +3,11 @@
 class Session
   def initialize(name)
     @name = name
-    @activity_count = 0
     @date = Time.now
     @activities = []
   end
 
-  attr_reader :name, :date
+  attr_reader :name, :date, :activities
 
   def edit_name(new_name)
     @name = new_name
@@ -16,7 +15,6 @@ class Session
 
   def add_activity(activity)
     @activities << activity
-    @activity_count += 1
   end
 
   def view_activities
