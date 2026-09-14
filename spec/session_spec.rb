@@ -22,13 +22,6 @@ RSpec.describe Session do
 end
 
 RSpec.describe Session do
-  it 'add an activity to session' do
-    session = Session.new("Arm Day")
-
-  end
-end
-
-RSpec.describe Session do
 
   it 'add an activity to session' do
     session = Session.new("Arm Day")
