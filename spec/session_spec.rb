@@ -1,4 +1,6 @@
 require 'session'
+require 'activity'
+require 'workout_set'
 
 RSpec.describe Session do
   it 'create a session with an empty activity list and a valid name and date' do
@@ -23,12 +25,25 @@ end
 
 RSpec.describe Session do
 
-  it 'add an activity to session' do
+  it 'add a valid activity to a session' do
+    session = Session.new("Arm Day")
+    bicep_curls = Activity.new("Bicep Curls")
+    bicep_curls.add_set(WorkoutSet.new(40, 5))
+    bicep_curls.add_set(WorkoutSet.new(20, 10))
+    session.add_activity(bicep_curls)
+    expect(session.activities[0].name).to eq("Bicep Curls")
+    expect(session.activities[0].sets[0].weight).to eq(40)
+    expect(session.activities[0].sets[0].reps).to eq(5)
+    expect(session.activities[0].sets[1].weight).to eq(20)
+    expect(session.activities[0].sets[1].reps).to eq(10)
+  end
+
+  it 'add an invalid activity to a session' do
     session = Session.new("Arm Day")
 
-    session.add_activity("Bicep Curls")
-
-    expect(session.activities).to include("Bicep Curls")
+    expect {
+      session.add_activity("just a string")
+    }.to raise_error(ArgumentError)
   end
 end
 
@@ -37,8 +52,8 @@ RSpec.describe Session do
   it 'view activities in session' do
     session = Session.new("Arm Day")
 
-    session.add_activity("Bicep Curls")
-    session.add_activity("Tricep Extensions")
+    session.add_activity(Activity.new("Bicep Curls"))
+    session.add_activity(Activity.new("Tricep Extensions"))
 
     expect { session.view_activities }.to output(
       "Bicep Curls\nTricep Extensions\n"
