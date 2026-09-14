@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class Main
+
+attr_reader :sessions, :goals, :records
+
   def initialize
     @records = []
     @goals = []
     @sessions = []
-    @session_count = 0
   end
 
   def add_record(record)
@@ -48,7 +50,7 @@ class Goal
     @date = Time.now
   end
 
-  attr_reader :name, :target
+  attr_reader :name, :target,
 
   def edit_name(new_name)
     @name = new_name
