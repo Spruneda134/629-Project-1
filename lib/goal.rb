@@ -6,7 +6,7 @@ class Goal
     @date = Time.now
   end
 
-  attr_reader :name, :target,
+  attr_reader :name, :target, :completed, :date
 
   def edit_name(new_name)
     @name = new_name
