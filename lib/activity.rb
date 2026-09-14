@@ -1,20 +1,26 @@
 # frozen_string_literal: true
 
+require 'workout_set'
+
 class Activity
-  def initialize(name, metric_value)
+  attr_reader :name, :sets, :metric_value
+
+  def initialize(name, metric_value = nil)
+    raise ArgumentError, "name must be a string." unless name.is_a?(String)
+
     @sets = []
     @name = name
     @metric_value = metric_value
     @set_count = 0
   end
 
-  attr_reader :name, :metric_value
-
   def edit_name(new_name)
     @name = new_name
   end
 
   def add_set(set)
+    raise ArgumentError, "Invalid WorkoutSet" unless set.is_a?(WorkoutSet)
+
     @sets << set
     @set_count += 1
   end
