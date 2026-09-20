@@ -5,7 +5,7 @@ require 'activity'
 class Session
   attr_reader :name, :date, :activities
 
-  def initialize(name)
+  def initialize(name = 'workout')
     @name = name
     @date = Time.now
     @activities = []
