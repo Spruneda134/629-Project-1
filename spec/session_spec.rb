@@ -3,13 +3,23 @@ require 'activity'
 require 'workout_set'
 
 RSpec.describe Session do
-  it 'create a session with an empty activity list and a valid name and date' do
-    session = Session.new("Leg Day")
 
-    expect(session.name).to eq("Leg Day")
-    expect(session.date).to be_a(Time)
-    expect(session.activities.length).to eq(0)
+  context 'with valid attributes' do
+    it 'create a session with an empty activity list and a valid name and date' do
+      session = Session.new("Leg Day")
+
+      expect(session.name).to eq("Leg Day")
+      expect(session.date).to be_a(Time)
+      expect(session.activities.length).to eq(0)
+    end
   end
+
+  context 'with invalid attributes' do
+    it 'raises an error when new name is empty' do
+      expect { Session.new("") }.to raise_error(ArgumentError, "Name cannot be empty")
+    end
+  end
+
 end
 
 RSpec.describe Session do
