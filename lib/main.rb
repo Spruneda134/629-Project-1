@@ -5,6 +5,7 @@ class Main
   attr_reader :sessions, :goals, :records
 
   def initialize
+
     @records = {}
     @goals = []
     @sessions = []
@@ -41,6 +42,9 @@ class Main
   end
 
   def add_session(session)
+
+    raise ArgumentError, "Name cannot be empty" if session.name.empty?
+
     @sessions << session
 
     # update personal records for all activities in a session
