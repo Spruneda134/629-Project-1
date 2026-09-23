@@ -10,7 +10,7 @@ require 'workout_set'
 RSpec.describe Record do
   it "view all records" do
     tracker = Main.new
-    session = Session.new
+    session = Session.new("Chest Day")
 
     bench = Activity.new('Bench press')
     bench.add_set(WorkoutSet.new(165, 5))
@@ -34,12 +34,12 @@ RSpec.describe Record do
   it "update new record" do
     tracker = Main.new
     
-    session_1 = Session.new
+    session_1 = Session.new("Chest Day")
     bench_1 = Activity.new('Bench press')
     bench_1.add_set(WorkoutSet.new(165, 5))
     session_1.add_activity(bench_1)
     
-    session_2 = Session.new
+    session_2 = Session.new("Chest Day 2")
     bench_2 = Activity.new('Bench press')
     bench_2.add_set(WorkoutSet.new(175, 5))
     session_2.add_activity(bench_2)
@@ -60,7 +60,7 @@ RSpec.describe Record do
     
     tracker.add_record("Bench press", 225)
 
-    session_1 = Session.new
+    session_1 = Session.new("Chest Day")
     bench_1 = Activity.new('Bench press')
     bench_1.add_set(WorkoutSet.new(165, 5))
     session_1.add_activity(bench_1)
@@ -80,7 +80,7 @@ RSpec.describe Record do
   it "gets personal record by activity name" do
     tracker = Main.new
     
-    session_1 = Session.new
+    session_1 = Session.new("Chest Day")
     bench_1 = Activity.new('Bench press')
     bench_1.add_set(WorkoutSet.new(165, 5))
     session_1.add_activity(bench_1)
