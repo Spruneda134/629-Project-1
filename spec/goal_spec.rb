@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'goal'
 
 RSpec.describe Goal do

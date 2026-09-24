@@ -8,9 +8,9 @@
       "RSpec"
     ],
     "project_name": "629-project-1",
-    "timestamp": "2026-09-23T21:48:28.032-05:00",
+    "timestamp": "2026-09-23T22:10:57.204-05:00",
     "root": "C:/Users/death/OneDrive/Documents/swe/projects/project1/629-Project-1",
-    "commit": "e673797b909532f791533880e9cf708924e0da5a",
+    "commit": "f1784bdf6507418b4200e4ad612456eaa00724a6",
     "primary_coverage": "line",
     "line_coverage": true,
     "branch_coverage": false,
@@ -23,7 +23,7 @@
       "omitted": 92,
       "total": 106,
       "percent": 90.56603773584905,
-      "strength": 3.9245283018867925
+      "strength": 4.254716981132075
     }
   },
   "coverage": {
@@ -89,10 +89,10 @@
         null,
         null,
         1,
-        10,
+        11,
         null,
-        10,
-        10,
+        11,
+        11,
         null,
         null,
         1,
@@ -265,9 +265,9 @@
         null,
         1,
         null,
-        9,
-        9,
-        9,
+        11,
+        11,
+        11,
         null,
         null,
         1,
@@ -302,21 +302,21 @@
         null,
         1,
         null,
-        9,
+        11,
         null,
-        8,
+        10,
         null,
         null,
-        8,
+        10,
+        7,
+        7,
+        7,
+        7,
+        null,
+        null,
+        null,
+        7,
         6,
-        6,
-        6,
-        6,
-        null,
-        null,
-        null,
-        6,
-        5,
         null,
         null,
         null,
@@ -410,23 +410,23 @@
         null,
         1,
         null,
+        14,
+        null,
+        12,
+        12,
         12,
         null,
-        11,
-        11,
-        11,
-        null,
         null,
         1,
         1,
         null,
         null,
         1,
+        11,
+        1,
+        null,
+        null,
         10,
-        1,
-        null,
-        null,
-        9,
         null,
         null,
         1,
@@ -469,17 +469,17 @@
         null,
         1,
         null,
+        16,
+        null,
         14,
         null,
         13,
-        null,
-        12,
         1,
         null,
         null,
-        11,
-        11,
-        11,
+        12,
+        12,
+        12,
         null,
         null
       ],
@@ -572,9 +572,125 @@
       }
     },
     {
-      "created_at": "2026-09-24T02:48:28Z",
+      "created_at": "2026-09-24T02:55:38Z",
       "branch": "test-coverage",
-      "commit": "e673797b909532f791533880e9cf708924e0da5a",
+      "commit": "f1784bdf6507418b4200e4ad612456eaa00724a6",
+      "totals": {
+        "line": 90.56
+      },
+      "groups": {},
+      "files": {
+        "lib/activity.rb": {
+          "line": 80.0
+        },
+        "lib/goal.rb": {
+          "line": 100.0
+        },
+        "lib/main.rb": {
+          "line": 91.17
+        },
+        "lib/record.rb": {
+          "line": 50.0
+        },
+        "lib/session.rb": {
+          "line": 100.0
+        },
+        "lib/workout_set.rb": {
+          "line": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-24T02:58:10Z",
+      "branch": "test-coverage",
+      "commit": "f1784bdf6507418b4200e4ad612456eaa00724a6",
+      "totals": {
+        "line": 90.56
+      },
+      "groups": {},
+      "files": {
+        "lib/activity.rb": {
+          "line": 80.0
+        },
+        "lib/goal.rb": {
+          "line": 100.0
+        },
+        "lib/main.rb": {
+          "line": 91.17
+        },
+        "lib/record.rb": {
+          "line": 50.0
+        },
+        "lib/session.rb": {
+          "line": 100.0
+        },
+        "lib/workout_set.rb": {
+          "line": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-24T03:05:24Z",
+      "branch": "test-coverage",
+      "commit": "f1784bdf6507418b4200e4ad612456eaa00724a6",
+      "totals": {
+        "line": 90.56
+      },
+      "groups": {},
+      "files": {
+        "lib/activity.rb": {
+          "line": 80.0
+        },
+        "lib/goal.rb": {
+          "line": 100.0
+        },
+        "lib/main.rb": {
+          "line": 91.17
+        },
+        "lib/record.rb": {
+          "line": 50.0
+        },
+        "lib/session.rb": {
+          "line": 100.0
+        },
+        "lib/workout_set.rb": {
+          "line": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-24T03:08:30Z",
+      "branch": "test-coverage",
+      "commit": "f1784bdf6507418b4200e4ad612456eaa00724a6",
+      "totals": {
+        "line": 90.56
+      },
+      "groups": {},
+      "files": {
+        "lib/activity.rb": {
+          "line": 80.0
+        },
+        "lib/goal.rb": {
+          "line": 100.0
+        },
+        "lib/main.rb": {
+          "line": 91.17
+        },
+        "lib/record.rb": {
+          "line": 50.0
+        },
+        "lib/session.rb": {
+          "line": 100.0
+        },
+        "lib/workout_set.rb": {
+          "line": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-09-24T03:10:57Z",
+      "branch": "test-coverage",
+      "commit": "f1784bdf6507418b4200e4ad612456eaa00724a6",
       "totals": {
         "line": 90.56
       },

@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'workout_set'
 
 RSpec.describe WorkoutSet do

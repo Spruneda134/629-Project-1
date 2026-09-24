@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'session'
 require 'activity'
 require 'workout_set'
