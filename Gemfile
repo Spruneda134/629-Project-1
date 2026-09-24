@@ -6,3 +6,4 @@ source "https://rubygems.org"
 gem 'rspec'
 gem 'rubocop'
 gem 'debug'
+gem 'simplecov', require: false
