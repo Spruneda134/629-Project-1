@@ -1,0 +1,8 @@
+# Ignore SimpleCov coverage reports
+coverage/
+
+# Ignore Mac OS system files (if you are on a Mac)
+.DS_Store
+
+# Ignore RSpec state
+spec/examples.txt
