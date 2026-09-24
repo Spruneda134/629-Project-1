@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'record'
 require 'debug'
 require 'main'
