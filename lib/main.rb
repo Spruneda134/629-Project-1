@@ -39,6 +39,7 @@ class Main
 
   def add_session(session)
     raise ArgumentError, 'Name cannot be empty' if session.name.empty?
+    raise ArgumentError, 'Name cannot be empty' if session.name == 'exit'
 
     @sessions << session
 
@@ -55,7 +56,7 @@ class Main
 
   def view_sessions
     @sessions.each do |session|
-      puts session
+      puts session.name
     end
   end
 end
