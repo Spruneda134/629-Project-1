@@ -76,6 +76,7 @@ GEM
 PLATFORMS
   aarch64-linux
   x64-mingw-ucrt
+  x86_64-linux
 
 DEPENDENCIES
   debug
