@@ -6,9 +6,8 @@ class Session
   attr_reader :name, :date, :activities
 
   def initialize(name)
+    raise ArgumentError, 'Name cannot be empty' if name.strip.empty?
 
-    raise ArgumentError, "Name cannot be empty" if name.strip.empty?
-    
     @name = name
     @date = Time.now
     @activities = []
@@ -19,9 +18,7 @@ class Session
   end
 
   def add_activity(activity)
-    unless activity.is_a?(Activity)
-      raise ArgumentError, "Expected an Activity, got #{activity.class}"
-    end
+    raise ArgumentError, "Expected an Activity, got #{activity.class}" unless activity.is_a?(Activity)
 
     @activities << activity
   end

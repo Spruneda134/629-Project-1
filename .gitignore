@@ -6,3 +6,4 @@ coverage/
 
 # Ignore RSpec state
 spec/examples.txt
+.ruby-version
