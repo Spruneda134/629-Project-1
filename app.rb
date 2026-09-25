@@ -1,16 +1,25 @@
 # app.rb
+require 'spec_helper'
+require 'main'
+require 'session' 
+require 'activity'
+require 'workout_set'
+
+main = Main.new
 
 loop do
   puts "\n--- Exercise Tracker ---"
-  puts '1. Add a Session'
-  puts '2. View Sessions'
-  puts '3. Exit'
-  print 'Choose an option (1-3): '
-
+  puts "1. Add a Session"
+  puts "2. View Sessions"
+  puts "3. Exit"
+  print "Choose an option (1-3): "
+  
   choice = gets.chomp
-
+  
   case choice
   when '1'
+    # session_name = gets.chomp
+    # session = double("Session", name: "Arm Day", activities: [])
     puts "\n> You chose to add a session."
   when '2'
     puts "\n> You chose to view sessions."
