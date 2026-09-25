@@ -2,11 +2,11 @@
 
 loop do
   puts "\n--- Exercise Tracker ---"
-  puts "1. Add a Session"
-  puts "2. View Sessions"
-  puts "3. Exit"
-  print "Choose an option (1-3): "
-  
+  puts '1. Add a Session'
+  puts '2. View Sessions'
+  puts '3. Exit'
+  print 'Choose an option (1-3): '
+
   choice = gets.chomp
 
   case choice

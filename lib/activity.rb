@@ -5,8 +5,8 @@ require 'workout_set'
 class Activity
   attr_reader :name, :sets, :metric_value
 
-  def initialize(name, metric_value = "lbs")
-    raise ArgumentError, "name must be a string." unless name.is_a?(String)
+  def initialize(name, metric_value = 'lbs')
+    raise ArgumentError, 'name must be a string.' unless name.is_a?(String)
 
     @sets = []
     @name = name
@@ -19,7 +19,7 @@ class Activity
   end
 
   def add_set(set)
-    raise ArgumentError, "Invalid WorkoutSet" unless set.is_a?(WorkoutSet)
+    raise ArgumentError, 'Invalid WorkoutSet' unless set.is_a?(WorkoutSet)
 
     @sets << set
     @set_count += 1

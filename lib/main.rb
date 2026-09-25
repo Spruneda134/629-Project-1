@@ -1,20 +1,18 @@
 # frozen_string_literal: true
 
 class Main
-
   attr_reader :sessions, :goals, :records
 
   def initialize
-
     @records = {}
     @goals = []
     @sessions = []
   end
 
   def add_record(activity_name, weight)
-    if !@records.key?(activity_name) || weight > @records[activity_name]
-      @records[activity_name] = weight
-    end
+    return unless !@records.key?(activity_name) || weight > @records[activity_name]
+
+    @records[activity_name] = weight
   end
 
   def view_all_records
@@ -24,9 +22,7 @@ class Main
   end
 
   def view_record(activity_name)
-    unless @records.key?(activity_name)
-      raise ArgumentError, "Activity does not exist in the records."
-    end
+    raise ArgumentError, 'Activity does not exist in the records.' unless @records.key?(activity_name)
 
     puts "#{activity_name}: #{@records[activity_name]}"
   end
@@ -42,8 +38,7 @@ class Main
   end
 
   def add_session(session)
-
-    raise ArgumentError, "Name cannot be empty" if session.name.empty?
+    raise ArgumentError, 'Name cannot be empty' if session.name.empty?
 
     @sessions << session
 
@@ -51,14 +46,10 @@ class Main
     session.activities.each do |activity|
       activity_max = 0
       activity.sets.each do |set|
-        if set.weight > activity_max
-          activity_max = set.weight
-        end
+        activity_max = set.weight if set.weight > activity_max
       end
 
-      if !@records.key?(activity.name) || activity_max > @records[activity.name]
-        @records[activity.name] = activity_max
-      end
+      @records[activity.name] = activity_max if !@records.key?(activity.name) || activity_max > @records[activity.name]
     end
   end
 
