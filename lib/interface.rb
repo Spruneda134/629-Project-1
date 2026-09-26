@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'main'
 require_relative 'session'
 require_relative 'activity'
@@ -5,8 +7,8 @@ require_relative 'workout_set'
 require_relative 'goal'
 
 class Interface
-  HEADER = 
-  "\n=========================================
+  HEADER =
+    "\n=========================================
             EXERCISE TRACKER
 ========================================="
 
@@ -44,9 +46,9 @@ class Interface
 
   private
 
-def add_session_menu
-    session_name = get_valid_name("> Enter Session Name: ")
-    
+  def add_session_menu
+    session_name = get_valid_name('> Enter Session Name: ')
+
     begin
       new_session = Session.new(session_name)
       @main.add_session(new_session)
@@ -68,7 +70,7 @@ def add_session_menu
       end
 
       puts "\n> Enter the name of the session to view its activities (or type 'exit' to return):"
-      
+
       session_name = gets.chomp
       break if session_name.downcase == 'exit'
 
@@ -92,20 +94,20 @@ def add_session_menu
       else
         session.view_activities
       end
-      
+
       puts "\n1. Add an Activity"
-      puts "2. Select an Activity (View/Add Sets)"
-      puts "3. Return to Sessions List"
-      print "Choose an option (1-3): "
+      puts '2. Select an Activity (View/Add Sets)'
+      puts '3. Return to Sessions List'
+      print 'Choose an option (1-3): '
 
       case gets.chomp
-        when '1'
-          activity_name = get_valid_name("> Enter the name of the activity to add:")          
-          begin
-            session.add_activity(Activity.new(activity_name))
-            puts "\n> Activity '#{activity_name}' added successfully!"
-          rescue ArgumentError => e
-            puts "\n> Error: #{e.message}. Please try again."
+      when '1'
+        activity_name = get_valid_name('> Enter the name of the activity to add:')
+        begin
+          session.add_activity(Activity.new(activity_name))
+          puts "\n> Activity '#{activity_name}' added successfully!"
+        rescue ArgumentError => e
+          puts "\n> Error: #{e.message}. Please try again."
         end
       when '2'
         puts "\n> Enter the name of the activity to select:"
@@ -137,16 +139,16 @@ def add_session_menu
       end
 
       puts "\n1. Add a Set"
-      puts "2. Return to Activity List"
-      print "Choose an option (1-2): "
+      puts '2. Return to Activity List'
+      print 'Choose an option (1-2): '
 
       case gets.chomp
       when '1'
         puts "\n> Enter weight (lbs):"
         weight = gets.chomp.to_f
-        puts "> Enter reps:"
+        puts '> Enter reps:'
         reps = gets.chomp.to_i
-        puts "> Enter RPE (1-10) or leave blank:"
+        puts '> Enter RPE (1-10) or leave blank:'
         rpe_input = gets.chomp
         rpe = rpe_input.empty? ? nil : rpe_input.to_i
 
@@ -155,14 +157,11 @@ def add_session_menu
           puts "\n> Set added successfully!"
 
           matching_goal = @main.goals.find { |goal| goal.name.downcase == activity.name.downcase }
-           
-          if matching_goal
-            if weight >= matching_goal.target && !matching_goal.completed
-              matching_goal.toggle_completed
-              puts "\n> Congratulations! You reached your goal of #{matching_goal.target} lbs for #{activity.name}!"
-            end
-          end
 
+          if matching_goal && weight >= matching_goal.target && !matching_goal.completed
+            matching_goal.toggle_completed
+            puts "\n> Congratulations! You reached your goal of #{matching_goal.target} lbs for #{activity.name}!"
+          end
         rescue ArgumentError => e
           puts "\n> Error: #{e.message}. Please try again."
         end
@@ -178,7 +177,7 @@ def add_session_menu
     loop do
       puts "\n#{prompt_text}"
       name = gets.chomp
-      
+
       if name.empty?
         puts "\n> Name cannot be empty. Please try again."
       elsif name.downcase == 'exit'
@@ -189,7 +188,7 @@ def add_session_menu
     end
   end
 
-    def get_valid_target(target_text)
+  def get_valid_target(target_text)
     loop do
       puts "\n#{target_text}"
       target = gets.chomp
@@ -209,11 +208,11 @@ def add_session_menu
     loop do
       puts HEADER
       puts "\n> Goal Tracker Menu:"
-      puts "1. View Completed Goals"
-      puts "2. View In-Progress Goals"
-      puts "3. Add a Goal"
-      puts "4. Return to Main Menu"
-      print "Choose an option (1-3): "
+      puts '1. View Completed Goals'
+      puts '2. View In-Progress Goals'
+      puts '3. Add a Goal'
+      puts '4. Return to Main Menu'
+      print 'Choose an option (1-3): '
 
       case gets.chomp
       when '1'
@@ -231,9 +230,9 @@ def add_session_menu
           @main.view_incomplete_goals
         end
       when '3'
-        goal_name = get_valid_name("> Enter the name of activity you would like to set a goal for:")
+        goal_name = get_valid_name('> Enter the name of activity you would like to set a goal for:')
 
-        target_value = get_valid_target("> Enter the target weight for this goal (lbs):")
+        target_value = get_valid_target('> Enter the target weight for this goal (lbs):')
         @main.add_goal(Goal.new(goal_name, target_value))
         puts "\n> Goal '#{goal_name}' added successfully!"
       when '4'
@@ -241,7 +240,6 @@ def add_session_menu
       else
         puts "\n> Invalid choice. Please try again."
       end
-
     end
   end
 end

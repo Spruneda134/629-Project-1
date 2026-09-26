@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'main'
 require 'session'
@@ -60,9 +62,9 @@ RSpec.describe 'As a user, I want to track and view my fitness goals' do
     goal1 = Goal.new('Bench Press', 200)
     goal2 = Goal.new('Squat', 315)
 
-    expect { main.view_completed_goals }.to output("").to_stdout
+    expect { main.view_completed_goals }.to output('').to_stdout
 
-    goal1.toggle_completed 
+    goal1.toggle_completed
 
     main.add_goal(goal1)
     main.add_goal(goal2)

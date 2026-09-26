@@ -5,11 +5,13 @@ require_relative 'activity'
 class Session
   attr_reader :name, :date, :activities
 
-  def initialize(name)
+  def initialize(name = 'Workout', date = nil)
     raise ArgumentError, 'Name cannot be empty' if name.strip.empty?
 
     @name = name
-    @date = Time.now
+
+    @date = date.nil? ? Time.now : date
+
     @activities = []
   end
 
@@ -18,7 +20,9 @@ class Session
   end
 
   def add_activity(activity)
-    raise ArgumentError, 'Activity name already exists' if @activities.any? { |s| s.name.downcase == activity.name.downcase }
+    raise ArgumentError, 'Activity name already exists' if @activities.any? do |s|
+      s.name.downcase == activity.name.downcase
+    end
     raise ArgumentError, "Expected an Activity, got #{activity.class}" unless activity.is_a?(Activity)
 
     @activities << activity

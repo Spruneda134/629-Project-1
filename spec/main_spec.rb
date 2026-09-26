@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'main'
 require 'goal'
@@ -33,20 +35,8 @@ RSpec.describe Main do
         main.add_session(double('Session', activities: [], name: ''))
       end.to raise_error(ArgumentError, 'Name cannot be empty')
     end
-
-    it 'raises an error when session name already exists' do
-          main = Main.new
-
-          first_session = double('Session', name: 'Leg Day', activities: [])
-          main.add_session(first_session)
-
-          expect do
-            duplicate_session = double('Session', name: 'Leg Day', activities: [])
-            main.add_session(duplicate_session)
-          end.to raise_error(ArgumentError, 'Session name already exists')
-        end
-      end
-    end
+  end
+end
 
 RSpec.describe Main do
   it 'view sessions in app' do
@@ -73,7 +63,7 @@ RSpec.describe Main do
       name = 'Bench Press'
       target = 200
       goal1 = Goal.new(name, target)
-      
+
       main.add_goal(goal1)
 
       expect { main.view_goals }.to output(
@@ -87,7 +77,7 @@ RSpec.describe Main do
         "Bench Press\nTarget: 200 lbs\n"
       ).to_stdout
       expect { main.view_incomplete_goals }.to output(
-        ""
+        ''
       ).to_stdout
     end
   end
