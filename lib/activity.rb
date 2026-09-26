@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'workout_set'
+require_relative 'workout_set'
 
 class Activity
   attr_reader :name, :sets, :metric_value
@@ -11,7 +11,7 @@ class Activity
     @sets = []
     @name = name
     @metric_value = metric_value
-    @set_count = 0
+    @set_index = 0
   end
 
   def edit_name(new_name)
@@ -22,12 +22,14 @@ class Activity
     raise ArgumentError, 'Invalid WorkoutSet' unless set.is_a?(WorkoutSet)
 
     @sets << set
-    @set_count += 1
   end
 
   def view_sets
     @sets.each do |set|
-      puts set
+      puts "\nSet #{@sets.index(set) + 1}:"
+      puts "Weight: #{set.weight} lbs"
+      puts "Reps: #{set.reps}"
+      puts "RPE: #{set.rpe}" if set.rpe
     end
   end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'activity'
+require_relative 'activity'
 
 class Session
   attr_reader :name, :date, :activities
