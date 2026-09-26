@@ -5,11 +5,13 @@ require 'activity'
 class Session
   attr_reader :name, :date, :activities
 
-  def initialize(name)
+  def initialize(name, date = nil)
     raise ArgumentError, 'Name cannot be empty' if name.strip.empty?
 
     @name = name
-    @date = Time.now
+
+    @date = date.nil? ? Time.now : date
+
     @activities = []
   end
 

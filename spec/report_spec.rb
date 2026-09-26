@@ -1,50 +1,110 @@
+# frozen_string_literal: true
+
+require 'main'
 require 'report'
 require 'session'
 require 'activity'
+require 'workout_set'
 
 RSpec.describe Report do
-  it 'make a report with a valid name' do
-    report = Report.new('Bench press')
+  it 'create a report with an existing activity name' do
+    tracker = Main.new
 
+    session = Session.new('Chest')
+    bench = Activity.new('Bench press')
+    bench.add_set(WorkoutSet.new(165, 5))
+    session.add_activity(bench)
+    tracker.add_session(session)
+
+    report = tracker.create_activity_report('Bench press')
+    expect(report).to be_a(Report)
     expect(report.activityName).to eq('Bench press')
-
   end
 
-  it 'make a report with an existing activity name' do
-    report = Report.new('Bench press')
+  it 'create a report with non-existing activity name' do
+    tracker = Main.new
 
-    session = Session.new('Arm Day')
-    session.add_activity(Activity.new('Bench press'))
-
-    expect(session.activities[0].name).to eq(report.activityName)
+    expect {
+      tracker.create_activity_report('Bench press')
+    }.to raise_error(ArgumentError)
   end
 
-#   it 'make a report that grabs all existing activities' do
-#     report = Report.new('Bench press')
+  it 'report correct PR' do
+    tracker = Main.new
 
-#     session = Session.new('Chest Day')
-#     session.add_activity(Activity.new('Bench press'))
-#     session.activities[0].add_set(WorkoutSet.new(165, 5))
+    # Create a chest session
+    session = Session.new('Chest')
+    bench = Activity.new('Bench press')
+    bench.add_set(WorkoutSet.new(165, 5))
+    session.add_activity(bench)
+    tracker.add_session(session)
 
-#     session.add_activity(Activity.new('Bench press'))
-#     session.activities[0].add_set(WorkoutSet.new(175, 7))
+    report = tracker.create_activity_report('Bench press')
+    expect(report.pr).to eq(165)
+  end
 
-#     expect(session.activities[0].name).to eq(report.activityName)
-#   end
+  it 'report correct date for the PR' do
+    tracker = Main.new
 
+    # add multiple chest sessions
+    past_time = Time.new(2001, 9, 11)
+    session = Session.new('Chest', past_time)
+    bench = Activity.new('Bench press')
+    bench.add_set(WorkoutSet.new(165, 5))
+    session.add_activity(bench)
+    tracker.add_session(session)
 
+    session = Session.new('Chest')
+    bench = Activity.new('Bench press')
+    bench.add_set(WorkoutSet.new(145, 5))
+    session.add_activity(bench)
+    tracker.add_session(session)
 
+    report = tracker.create_activity_report('Bench press')
+    expect(report.pr_date).to eq(past_time)
+  end
 
+  it 'view activity report shows PR, time since PR, and session table' do
+    tracker = Main.new
 
-  context 'make a report with invalid attributes' do
-    it 'raises an error when no activity name is entered' do
-      expect { Report.new('') }.to raise_error(ArgumentError, 'Activity name cannot be nil or empty')
+    [['Chest Day', Time.new(2026, 8, 29), 165],
+     ['Push', Time.new(2026, 9, 12), 185],
+     ['Upper Body', Time.new(2026, 9, 19), 180]].each do |name, date, weight|
+      session = Session.new(name, date)
+      bench = Activity.new('Bench press')
+      bench.add_set(WorkoutSet.new(weight - 20, 8))
+      bench.add_set(WorkoutSet.new(weight, 3))
+      session.add_activity(bench)
+      tracker.add_session(session)
     end
 
-    it 'raises an error when the activity does not exist' do
-      expect { Report.new('Non-existent Activity') }.to raise_error(ArgumentError, 'Activity does not exist in the records.')
-    end
+    expect do
+      tracker.view_activity_report('Bench press')
+    end.to output(<<~REPORT).to_stdout
+      Bench press Report
+      ------------------
+      PR: 185 lbs (set on 2026-09-12)
+      Time since last PR: 14 days
 
+      Date        Session     Max Weight
+      ----------  ----------  ----------
+      2026-08-29  Chest Day   165 lbs
+      2026-09-12  Push        185 lbs     *PR
+      2026-09-19  Upper Body  180 lbs
+    REPORT
   end
 
+  it 'view activity report for a manually added PR' do
+    tracker = Main.new
+    tracker.add_record('Squat', 225)
+
+    expect do
+      tracker.view_activity_report('Squat')
+    end.to output(<<~REPORT).to_stdout
+      Squat Report
+      ------------
+      PR: 225 lbs (added manually)
+      Time since last PR: N/A
+    REPORT
+  end
 end
