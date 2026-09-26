@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'report'
+require_relative 'report'
 
 class Main
   attr_reader :sessions, :goals, :records
