@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class Goal
   def initialize(name, target)
     raise ArgumentError, 'Name cannot be empty' if name.strip.empty?
     raise ArgumentError, 'Target must be an integer' unless target.is_a?(Integer)
-    raise ArgumentError, 'Target cannot be negative' if target < 0
+    raise ArgumentError, 'Target cannot be negative' if target.negative?
 
     @name = name
     @target = target
@@ -20,7 +22,7 @@ class Goal
 
   def edit_target(new_target)
     raise ArgumentError, 'Target must be an integer' unless new_target.is_a?(Integer)
-    raise ArgumentError, 'Target cannot be negative' if new_target < 0
+    raise ArgumentError, 'Target cannot be negative' if new_target.negative?
 
     @target = new_target
   end

@@ -3,7 +3,6 @@
 require 'report'
 
 class Main
-
   attr_reader :sessions, :goals, :records
 
   def initialize
@@ -13,9 +12,9 @@ class Main
   end
 
   def add_record(activity_name, weight)
-    if !@records.key?(activity_name) || weight > @records[activity_name]
-      @records[activity_name] = weight
-    end
+    return unless !@records.key?(activity_name) || weight > @records[activity_name]
+
+    @records[activity_name] = weight
   end
 
   def view_all_records
@@ -25,17 +24,13 @@ class Main
   end
 
   def view_record(activity_name)
-    unless @records.key?(activity_name)
-      raise ArgumentError, "Activity does not exist in the records."
-    end
+    raise ArgumentError, 'Activity does not exist in the records.' unless @records.key?(activity_name)
 
     puts "#{activity_name}: #{@records[activity_name]}"
   end
 
   def create_activity_report(activity_name)
-    unless @records.key?(activity_name)
-      raise ArgumentError, "Activity does not exist in the records."
-    end
+    raise ArgumentError, 'Activity does not exist in the records.' unless @records.key?(activity_name)
 
     pr = @records[activity_name]
     unit = 'lbs'
@@ -68,35 +63,46 @@ class Main
 
   def view_goals
     @goals.each do |goal|
-      puts goal
+      puts goal.name
+      puts "Target: #{goal.target} lbs"
+    end
+  end
+
+  def view_completed_goals
+    completed_goals = @goals.select(&:completed)
+    completed_goals.each do |goal|
+      puts goal.name
+      puts "Target: #{goal.target} lbs"
+    end
+  end
+
+  def view_incomplete_goals
+    incomplete_goals = @goals.reject(&:completed)
+    incomplete_goals.each do |goal|
+      puts goal.name
+      puts "Target: #{goal.target} lbs"
     end
   end
 
   def add_session(session)
+    raise ArgumentError, 'Name cannot be empty' if session.name.empty?
+    raise ArgumentError, 'Name cannot be empty' if session.name == 'exit'
 
-    raise ArgumentError, "Name cannot be empty" if session.name.empty?
-
-    
     @sessions << session
 
-    # update personal records for all activities in a session
     session.activities.each do |activity|
       activity_max = 0
       activity.sets.each do |set|
-        if set.weight > activity_max
-          activity_max = set.weight
-        end
+        activity_max = set.weight if set.weight > activity_max
       end
 
-      if !@records.key?(activity.name) || activity_max > @records[activity.name]
-        @records[activity.name] = activity_max
-      end
+      @records[activity.name] = activity_max if !@records.key?(activity.name) || activity_max > @records[activity.name]
     end
   end
 
   def view_sessions
     @sessions.each do |session|
-      puts session
+      puts session.name
     end
   end
 end

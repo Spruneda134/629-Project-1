@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'activity'
+require_relative 'activity'
 
 class Session
   attr_reader :name, :date, :activities
 
-  def initialize(name, date = nil)
+  def initialize(name = 'Workout', date = nil)
     raise ArgumentError, 'Name cannot be empty' if name.strip.empty?
 
     @name = name
@@ -20,6 +20,9 @@ class Session
   end
 
   def add_activity(activity)
+    raise ArgumentError, 'Activity name already exists' if @activities.any? do |s|
+      s.name.downcase == activity.name.downcase
+    end
     raise ArgumentError, "Expected an Activity, got #{activity.class}" unless activity.is_a?(Activity)
 
     @activities << activity

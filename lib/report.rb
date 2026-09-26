@@ -6,9 +6,7 @@ class Report
   attr_reader :activityName, :pr, :pr_date, :history, :unit
 
   def initialize(activityName, pr = nil, pr_date = nil, history = [], unit = 'lbs')
-    if activityName.nil? || activityName.empty?
-      raise ArgumentError, 'Activity name cannot be nil or empty'
-    end
+    raise ArgumentError, 'Activity name cannot be nil or empty' if activityName.nil? || activityName.empty?
 
     @activityName = activityName
     @pr = pr

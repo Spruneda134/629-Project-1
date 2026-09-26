@@ -24,9 +24,9 @@ RSpec.describe Report do
   it 'create a report with non-existing activity name' do
     tracker = Main.new
 
-    expect {
+    expect do
       tracker.create_activity_report('Bench press')
-    }.to raise_error(ArgumentError)
+    end.to raise_error(ArgumentError)
   end
 
   it 'report correct PR' do
