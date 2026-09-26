@@ -33,17 +33,34 @@ class Main
 
   def view_goals
     @goals.each do |goal|
-      puts goal
+      puts goal.name
+      puts "Target: #{goal.target} lbs"
+    end
+  end
+
+  def view_completed_goals
+    completed_goals = @goals.select(&:completed)
+    completed_goals.each do |goal|
+      puts goal.name
+      puts "Target: #{goal.target} lbs"
+    end
+  end
+
+  def view_incomplete_goals
+    incomplete_goals = @goals.reject(&:completed)
+    incomplete_goals.each do |goal|
+      puts goal.name
+      puts "Target: #{goal.target} lbs"
     end
   end
 
   def add_session(session)
+    raise ArgumentError, 'Session name already exists' if @sessions.any? { |s| s.name.downcase == session.name.downcase }
     raise ArgumentError, 'Name cannot be empty' if session.name.empty?
     raise ArgumentError, 'Name cannot be empty' if session.name == 'exit'
 
     @sessions << session
 
-    # update personal records for all activities in a session
     session.activities.each do |activity|
       activity_max = 0
       activity.sets.each do |set|

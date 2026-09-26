@@ -2,12 +2,13 @@ require_relative 'main'
 require_relative 'session'
 require_relative 'activity'
 require_relative 'workout_set'
+require_relative 'goal'
 
 class Interface
   HEADER = 
   "\n=========================================
-                 EXERCISE TRACKER
-    ========================================="
+            EXERCISE TRACKER
+========================================="
 
   def initialize
     @main = Main.new
@@ -18,7 +19,9 @@ class Interface
       puts HEADER
       puts '1. Add a Session'
       puts '2. View Sessions (view activities and sets)'
-      puts '3. Exit'
+      puts '3. Open Goal Tracker'
+      puts '4. Open Personal Record Tracker'
+      puts '5. Exit'
       print 'Choose an option (1-3): '
 
       case gets.chomp
@@ -27,6 +30,10 @@ class Interface
       when '2'
         display_sessions
       when '3'
+        open_goal_tracker
+      when '4'
+        puts "\n> Personal Record Tracker feature is under development."
+      when '5'
         puts "\n> Goodbye!"
         break
       else
@@ -37,11 +44,16 @@ class Interface
 
   private
 
-  def add_session_menu
+def add_session_menu
     session_name = get_valid_name("> Enter Session Name: ")
-    new_session = Session.new(session_name)
-    @main.add_session(new_session)
-    puts "\n> Session '#{session_name}' added successfully!"
+    
+    begin
+      new_session = Session.new(session_name)
+      @main.add_session(new_session)
+      puts "\n> Session '#{session_name}' added successfully!"
+    rescue ArgumentError => e
+      puts "\n> Error: #{e.message}. Please try again."
+    end
   end
 
   def display_sessions
@@ -87,10 +99,14 @@ class Interface
       print "Choose an option (1-3): "
 
       case gets.chomp
-      when '1'
-        activity_name = get_valid_name("> Enter the name of the activity to add:")
-        session.add_activity(Activity.new(activity_name))
-        puts "\n> Activity '#{activity_name}' added successfully!"
+        when '1'
+          activity_name = get_valid_name("> Enter the name of the activity to add:")          
+          begin
+            session.add_activity(Activity.new(activity_name))
+            puts "\n> Activity '#{activity_name}' added successfully!"
+          rescue ArgumentError => e
+            puts "\n> Error: #{e.message}. Please try again."
+        end
       when '2'
         puts "\n> Enter the name of the activity to select:"
         activity_name = gets.chomp
@@ -137,6 +153,16 @@ class Interface
         begin
           activity.add_set(WorkoutSet.new(weight, reps, rpe))
           puts "\n> Set added successfully!"
+
+          matching_goal = @main.goals.find { |goal| goal.name.downcase == activity.name.downcase }
+           
+          if matching_goal
+            if weight >= matching_goal.target && !matching_goal.completed
+              matching_goal.toggle_completed
+              puts "\n> Congratulations! You reached your goal of #{matching_goal.target} lbs for #{activity.name}!"
+            end
+          end
+
         rescue ArgumentError => e
           puts "\n> Error: #{e.message}. Please try again."
         end
@@ -160,6 +186,62 @@ class Interface
       else
         return name
       end
+    end
+  end
+
+    def get_valid_target(target_text)
+    loop do
+      puts "\n#{target_text}"
+      target = gets.chomp
+
+      if target.empty?
+        puts "\n> Target value cannot be empty. Please try again."
+      elsif target.to_i <= 0
+        puts "\n> Target value must be a positive integer. Please try again."
+      else
+        return target.to_i
+      end
+    end
+  end
+
+  def open_goal_tracker
+    puts "\n> Goal Tracker feature is under development."
+    loop do
+      puts HEADER
+      puts "\n> Goal Tracker Menu:"
+      puts "1. View Completed Goals"
+      puts "2. View In-Progress Goals"
+      puts "3. Add a Goal"
+      puts "4. Return to Main Menu"
+      print "Choose an option (1-3): "
+
+      case gets.chomp
+      when '1'
+        if @main.goals.select(&:completed).empty?
+          puts "\n> No completed goals found."
+        else
+          puts "\n> Viewing Completed Goals:"
+          @main.view_completed_goals
+        end
+      when '2'
+        if @main.goals.reject(&:completed).empty?
+          puts "\n> No on-going goals found."
+        else
+          puts "\n> Viewing In-Progress Goals:"
+          @main.view_incomplete_goals
+        end
+      when '3'
+        goal_name = get_valid_name("> Enter the name of activity you would like to set a goal for:")
+
+        target_value = get_valid_target("> Enter the target weight for this goal (lbs):")
+        @main.add_goal(Goal.new(goal_name, target_value))
+        puts "\n> Goal '#{goal_name}' added successfully!"
+      when '4'
+        break
+      else
+        puts "\n> Invalid choice. Please try again."
+      end
+
     end
   end
 end

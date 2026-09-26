@@ -3,6 +3,7 @@ require 'main'
 require 'session'
 require 'activity'
 require 'workout_set'
+require 'goal'
 
 RSpec.describe 'As a user, I want to add activities and sets to a session' do
   it 'allows a user to create a session with activities and sets, and adds it to the main tracker' do
@@ -49,5 +50,25 @@ RSpec.describe 'As a user, I want to add sessions to a tracker so I can keep tra
     end.to raise_error(ArgumentError, 'Name cannot be empty')
 
     expect(main.sessions.length).to eq(0)
+  end
+end
+
+RSpec.describe 'As a user, I want to track and view my fitness goals' do
+  it 'allows a user to view completed and incomplete goals separately' do
+    main = Main.new
+
+    goal1 = Goal.new('Bench Press', 200)
+    goal2 = Goal.new('Squat', 315)
+
+    expect { main.view_completed_goals }.to output("").to_stdout
+
+    goal1.toggle_completed 
+
+    main.add_goal(goal1)
+    main.add_goal(goal2)
+
+    expect { main.view_completed_goals }.to output("Bench Press\nTarget: 200 lbs\n").to_stdout
+
+    expect { main.view_incomplete_goals }.to output("Squat\nTarget: 315 lbs\n").to_stdout
   end
 end
