@@ -26,7 +26,7 @@ class Activity
 
   def view_sets
     @sets.each do |set|
-      puts "\nSet #{@sets.index(set) + 1}:"
+      puts "Set #{@sets.index(set) + 1}:"
       puts "Weight: #{set.weight} lbs"
       puts "Reps: #{set.reps}"
       puts "RPE: #{set.rpe}" if set.rpe
