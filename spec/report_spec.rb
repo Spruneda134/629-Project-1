@@ -77,6 +77,7 @@ RSpec.describe Report do
       session.add_activity(bench)
       tracker.add_session(session)
     end
+    allow(Time).to receive(:now).and_return(Time.new(2026, 9, 26))
 
     expect do
       tracker.view_activity_report('Bench press')
