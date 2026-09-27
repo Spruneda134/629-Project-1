@@ -19,45 +19,79 @@ class Interface
   end
 
   def start
-    loop do
-      puts HEADER
-      puts '1. Add a Session'
-      puts '2. View Sessions (view activities and sets)'
-      puts '3. Open Goal Tracker'
-      puts '4. Open Personal Record Tracker'
-      puts '0. Exit'
-      print 'Choose an option (1-3): '
+    catch(:exit_app) do
+      loop do
+        puts HEADER
+        puts '1. Add a Session'
+        puts '2. View Sessions (view activities and sets)'
+        puts '3. Open Goal Tracker'
+        puts '4. Open Personal Record Tracker'
+        puts '0. Exit'
+        print 'Choose an option (1-3): '
 
-      case gets.chomp
-      when '1'
-        add_session_menu
-      when '2'
-        display_sessions
-      when '3'
-        open_goal_tracker
-      when '4'
-        open_record_tracker
-      when '0'
-        @main.save
-        puts "\n> Goodbye!"
-        break
-      else
-        puts "\n> Invalid choice. Please try again."
+        case read_input
+        when '1'
+          add_session_menu
+        when '2'
+          display_sessions
+        when '3'
+          open_goal_tracker
+        when '4'
+          open_record_tracker
+        when '0'
+          throw :exit_app
+        else
+          puts "\n> Invalid choice. Please try again."
+        end
       end
     end
+
+    @main.save
+    puts "\n> Goodbye!"
   end
 
   private
 
-  def add_session_menu
-    session_name = get_valid_name('> Enter Session Name: ')
+  def read_input
+    input = gets.chomp
+    throw :exit_app if input.casecmp('exit').zero?
 
-    begin
-      new_session = Session.new(session_name)
-      @main.add_session(new_session)
-      puts "\n> Session '#{session_name}' added successfully!"
-    rescue ArgumentError => e
-      puts "\n> Error: #{e.message}. Please try again."
+    input
+  end
+
+  def add_session_menu
+    loop do
+      session_name = get_valid_name('> Enter Session Name: ')
+
+      begin
+        new_session = Session.new(session_name)
+        @main.add_session(new_session)
+        puts "\n> Session '#{session_name}' added successfully!"
+      rescue ArgumentError => e
+        puts "\n> Error: #{e.message}. Please try again."
+        next
+      end
+
+      loop do
+        puts "\nWhat would you like to do next?"
+        puts "1. Add an activity to session '#{new_session.name}'"
+        puts '2. Create another session'
+        puts '3. Return to main menu'
+        print 'Choose an option (1-3): '
+
+        case read_input
+        when '1'
+          create_activity_flow(new_session)
+          view_chosen_session(new_session)
+          return
+        when '2'
+          break
+        when '3'
+          return
+        else
+          puts "\n> Invalid choice. Please try again."
+        end
+      end
     end
   end
 
@@ -72,10 +106,9 @@ class Interface
         @main.view_sessions
       end
 
-      puts "\n> Enter the name of the session to view its activities (or type 'exit' to return):"
+      puts "\n> Enter the name of the session to view its activities (or type 'exit' to quit):"
 
-      session_name = gets.chomp
-      break if session_name.downcase == 'exit'
+      session_name = read_input
 
       selected_session = @main.sessions.find { |s| s.name == session_name }
 
@@ -103,18 +136,12 @@ class Interface
       puts '3. Return to Sessions List'
       print 'Choose an option (1-3): '
 
-      case gets.chomp
+      case read_input
       when '1'
-        activity_name = get_valid_name('> Enter the name of the activity to add:')
-        begin
-          session.add_activity(Activity.new(activity_name))
-          puts "\n> Activity '#{activity_name}' added successfully!"
-        rescue ArgumentError => e
-          puts "\n> Error: #{e.message}. Please try again."
-        end
+        create_activity_flow(session)
       when '2'
         puts "\n> Enter the name of the activity to select:"
-        activity_name = gets.chomp
+        activity_name = read_input
         selected_activity = session.activities.find { |a| a.name == activity_name }
 
         if selected_activity
@@ -145,30 +172,9 @@ class Interface
       puts '2. Return to Activity List'
       print 'Choose an option (1-2): '
 
-      case gets.chomp
+      case read_input
       when '1'
-        puts "\n> Enter weight (lbs):"
-        weight = gets.chomp.to_f
-        puts '> Enter reps:'
-        reps = gets.chomp.to_i
-        puts '> Enter RPE (1-10) or leave blank:'
-        rpe_input = gets.chomp
-        rpe = rpe_input.empty? ? nil : rpe_input.to_i
-
-        begin
-          activity.add_set(WorkoutSet.new(weight, reps, rpe))
-          @main.add_record(activity.name, weight)
-          puts "\n> Set added successfully!"
-
-          matching_goal = @main.goals.find { |goal| goal.name.downcase == activity.name.downcase }
-
-          if matching_goal && weight >= matching_goal.target && !matching_goal.completed
-            matching_goal.toggle_completed
-            puts "\n> Congratulations! You reached your goal of #{matching_goal.target} lbs for #{activity.name}!"
-          end
-        rescue ArgumentError => e
-          puts "\n> Error: #{e.message}. Please try again."
-        end
+        add_set_to_activity(activity)
       when '2'
         break
       else
@@ -177,15 +183,91 @@ class Interface
     end
   end
 
+  def create_activity_flow(session)
+    loop do
+      activity_name = get_valid_name(" > Enter the name of the activity to add to '#{session.name}':")
+
+      begin
+        activity = Activity.new(activity_name)
+        session.add_activity(activity)
+        puts "\n> Activity '#{activity_name}' added successfully!"
+      rescue ArgumentError => e
+        puts "\n> Error: #{e.message}. Please try again."
+        next
+      end
+
+      loop do
+        puts "\nWhat would you like to do next?"
+        puts "1. Add a set to activity '#{activity.name}'"
+        puts '2. Create another activity'
+        puts "3. Go back to session '#{session.name}' dashboard"
+        print 'Choose an option (1-3): '
+
+        case read_input
+        when '1'
+          add_sets_to_activity(activity)
+        when '2'
+          break
+        when '3'
+          return
+        else
+          puts "\n> Invalid choice. Please try again."
+        end
+      end
+    end
+  end
+
+  def add_sets_to_activity(activity)
+    loop do
+      add_set_to_activity(activity)
+      loop do
+        puts "\n1. Add another set"
+        puts '2. Return to activity options'
+        print 'Choose an option (1-2): '
+
+        case read_input
+        when '1'
+          break
+        when '2'
+          return
+        else
+          puts "\n> Invalid choice. Please try again."
+        end
+      end
+    end
+  end
+
+  def add_set_to_activity(activity)
+    puts "\n> Enter weight (lbs):"
+    weight = read_input.to_f
+    puts '> Enter reps:'
+    reps = read_input.to_i
+    puts '> Enter RPE (1-10) or leave blank:'
+    rpe_input = read_input
+    rpe = rpe_input.empty? ? nil : rpe_input.to_i
+
+    begin
+      activity.add_set(WorkoutSet.new(weight, reps, rpe))
+      @main.add_record(activity.name, weight)
+      puts "\n> Set added successfully!"
+
+      matching_goal = @main.goals.find { |goal| goal.name.downcase == activity.name.downcase }
+      if matching_goal && weight >= matching_goal.target && !matching_goal.completed
+        matching_goal.toggle_completed
+        puts "\n> Congratulations! You reached your goal of #{matching_goal.target} lbs for #{activity.name}!"
+      end
+    rescue ArgumentError => e
+      puts "\n> Error: #{e.message}. Please try again."
+    end
+  end
+
   def get_valid_name(prompt_text)
     loop do
       puts "\n#{prompt_text}"
-      name = gets.chomp
+      name = read_input
 
       if name.empty?
         puts "\n> Name cannot be empty. Please try again."
-      elsif name.downcase == 'exit'
-        puts "\n> Name cannot be 'exit'. Please try again."
       else
         return name
       end
@@ -195,7 +277,7 @@ class Interface
   def get_valid_target(target_text)
     loop do
       puts "\n#{target_text}"
-      target = gets.chomp
+      target = read_input
 
       if target.empty?
         puts "\n> Target value cannot be empty. Please try again."
@@ -217,7 +299,7 @@ class Interface
       puts '4. Return to Main Menu'
       print 'Choose an option (1-3): '
 
-      case gets.chomp
+      case read_input
       when '1'
         if @main.goals.select(&:completed).empty?
           puts "\n> No completed goals found."
@@ -261,7 +343,7 @@ class Interface
       puts '1. Return to Main Menu'
       print 'Choose an option (1): '
 
-      case gets.chomp
+      case read_input
         when '1'
           break
         else
