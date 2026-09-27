@@ -6,3 +6,5 @@ coverage/
 
 # Ignore RSpec state
 spec/examples.txt
+# Saved tracker data
+data/

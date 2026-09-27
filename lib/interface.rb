@@ -14,6 +14,7 @@ class Interface
 
   def initialize
     @main = Main.new
+    @main.load
   end
 
   def start
@@ -36,6 +37,7 @@ class Interface
       when '4'
         puts "\n> Personal Record Tracker feature is under development."
       when '5'
+        @main.save
         puts "\n> Goodbye!"
         break
       else
