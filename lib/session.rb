@@ -7,8 +7,6 @@ class Session
   attr_reader :name, :date, :activities
 
   def initialize(name = 'Workout', date = nil)
-    raise ArgumentError, 'Name cannot be empty' if name.strip.empty?
-
     @name = name
 
     @date = date.nil? ? Time.now : date

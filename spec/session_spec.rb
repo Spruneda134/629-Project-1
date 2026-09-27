@@ -15,12 +15,6 @@ RSpec.describe Session do
       expect(session.activities.length).to eq(0)
     end
   end
-
-  context 'with invalid attributes' do
-    it 'raises an error when new name is empty' do
-      expect { Session.new('') }.to raise_error(ArgumentError, 'Name cannot be empty')
-    end
-  end
 end
 
 RSpec.describe Session do

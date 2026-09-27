@@ -7,7 +7,7 @@ Exercise Tracker allows the user to track progress in any exercises like weight 
 ### Intended user
 People interested in going to the gym and being able to keep track of their growth in their favorite exercises and analyze their workouts. 
 
-### Core features (4-5)
+### Core features
 1. Add activities to a sessions with relevant metrics (e.g. weight lifted)
 2. Add sessions to a tracker.
 3. Obtain a personal record in an activity.
