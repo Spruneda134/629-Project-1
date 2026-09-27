@@ -71,6 +71,22 @@ RSpec.describe Main, 'personal records' do
       tracker.view_all_records
     end.to output("Bench press: 225\n").to_stdout
   end
+
+  it 'updates the personal record when a set is added to an activity' do
+    tracker = Main.new
+    interface = Interface.allocate
+    interface.instance_variable_set(:@main, tracker)
+    activity = Activity.new('Bench press')
+
+    allow(interface).to receive(:gets).and_return('1', '165', '5', '', '2')
+    expect { interface.send(:view_chosen_activity, activity) }.to output.to_stdout
+    expect(tracker.records['Bench press']).to eq(165.0)
+
+    tracker.add_record('Bench press', 175)
+    allow(interface).to receive(:gets).and_return('1', '170', '5', '', '2')
+    expect { interface.send(:view_chosen_activity, activity) }.to output.to_stdout
+    expect(tracker.records['Bench press']).to eq(175)
+  end
 end
 
 ## Sad Path

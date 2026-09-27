@@ -25,7 +25,7 @@ class Interface
       puts '2. View Sessions (view activities and sets)'
       puts '3. Open Goal Tracker'
       puts '4. Open Personal Record Tracker'
-      puts '5. Exit'
+      puts '0. Exit'
       print 'Choose an option (1-3): '
 
       case gets.chomp
@@ -36,8 +36,8 @@ class Interface
       when '3'
         open_goal_tracker
       when '4'
-        puts "\n> Personal Record Tracker feature is under development."
-      when '5'
+        open_record_tracker
+      when '0'
         @main.save
         puts "\n> Goodbye!"
         break
@@ -157,6 +157,7 @@ class Interface
 
         begin
           activity.add_set(WorkoutSet.new(weight, reps, rpe))
+          @main.add_record(activity.name, weight)
           puts "\n> Set added successfully!"
 
           matching_goal = @main.goals.find { |goal| goal.name.downcase == activity.name.downcase }
@@ -207,7 +208,6 @@ class Interface
   end
 
   def open_goal_tracker
-    puts "\n> Goal Tracker feature is under development."
     loop do
       puts HEADER
       puts "\n> Goal Tracker Menu:"
@@ -245,4 +245,29 @@ class Interface
       end
     end
   end
+
+  def open_record_tracker
+    loop do
+      puts HEADER
+
+        if @main.records.empty?
+          puts "\n> No Personal Records Found."
+        else
+          puts "\n> Viewing Personal Records:"
+          @main.view_all_records
+        end
+
+      puts "\n> Goal Tracker Menu:"
+      puts '1. Return to Main Menu'
+      print 'Choose an option (1): '
+
+      case gets.chomp
+        when '1'
+          break
+        else
+          puts "\n> Invalid choice. Please try again."
+        end
+    end
+  end
+
 end
