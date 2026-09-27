@@ -18,7 +18,7 @@ RSpec.describe Report do
 
     report = tracker.create_activity_report('Bench press')
     expect(report).to be_a(Report)
-    expect(report.activityName).to eq('Bench press')
+    expect(report.activity_name).to eq('Bench press')
   end
 
   it 'create a report with non-existing activity name' do
@@ -40,7 +40,7 @@ RSpec.describe Report do
     tracker.add_session(session)
 
     report = tracker.create_activity_report('Bench press')
-    expect(report.pr).to eq(165)
+    expect(report.personal_record).to eq(165)
   end
 
   it 'report correct date for the PR' do
