@@ -2,6 +2,7 @@
 
 require_relative 'workout_set'
 
+# A single exercise within a session, holding its sets.
 class Activity
   attr_reader :name, :sets, :metric_value
 

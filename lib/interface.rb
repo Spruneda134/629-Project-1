@@ -6,6 +6,7 @@ require_relative 'activity'
 require_relative 'workout_set'
 require_relative 'goal'
 
+# Command line menu for adding and browsing sessions, activities, sets and goals.
 class Interface
   HEADER =
     "\n=========================================

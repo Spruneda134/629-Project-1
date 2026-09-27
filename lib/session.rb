@@ -2,6 +2,7 @@
 
 require_relative 'activity'
 
+# A workout session made up of activities.
 class Session
   attr_reader :name, :date, :activities
 

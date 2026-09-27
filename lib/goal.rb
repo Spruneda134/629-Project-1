@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# A target weight the user wants to reach for an activity.
 class Goal
   def initialize(name, target)
     raise ArgumentError, 'Name cannot be empty' if name.strip.empty?

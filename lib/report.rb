@@ -2,6 +2,7 @@
 
 require 'date'
 
+# Summary report of an activity that keeps track of previous sessions and personal record.
 class Report
   attr_reader :activity_name, :personal_record, :pr_date, :history, :unit
 

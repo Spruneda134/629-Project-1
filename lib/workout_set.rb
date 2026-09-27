@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# One set of an activity: weight, reps and optional RPE.
 class WorkoutSet
   attr_reader :weight, :reps, :rpe
 

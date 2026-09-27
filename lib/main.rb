@@ -5,6 +5,7 @@ require 'fileutils'
 require_relative 'report'
 require_relative 'storage'
 
+# Tracker that holds the user's sessions, goals and personal records with persistency.
 class Main
   attr_reader :sessions, :goals, :records
 
