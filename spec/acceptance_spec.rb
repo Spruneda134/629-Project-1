@@ -8,7 +8,6 @@ require 'workout_set'
 require 'goal'
 require 'interface'
 
-
 RSpec.describe 'As a user, I want to add activities and sets to a session' do
   def queue_console_input(interface, inputs)
     answers = inputs.dup
