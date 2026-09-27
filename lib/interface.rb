@@ -23,11 +23,12 @@ class Interface
       loop do
         puts HEADER
         puts '1. Add a Session'
-        puts '2. View Sessions (view activities and sets)'
+        puts '2. View/Edit Sessions'
         puts '3. Open Goal Tracker'
         puts '4. Open Personal Record Tracker'
+        puts '5. View Activity Report'
         puts '0. Exit'
-        print 'Choose an option (1-3): '
+        print 'Choose an option (0-5): '
 
         case read_input
         when '1'
@@ -38,6 +39,8 @@ class Interface
           open_goal_tracker
         when '4'
           open_record_tracker
+        when '5'
+          open_activity_report
         when '0'
           throw :exit_app
         else
@@ -61,7 +64,7 @@ class Interface
 
   def add_session_menu
     loop do
-      session_name = get_valid_name('> Enter Session Name: ')
+      session_name = get_valid_name("> Enter Session Name (leave blank for 'Workout'): ", default: 'Workout')
 
       begin
         new_session = Session.new(session_name)
@@ -81,8 +84,11 @@ class Interface
 
         case read_input
         when '1'
-          create_activity_flow(new_session)
-          view_chosen_session(new_session)
+          if create_activity_flow(new_session) == :sessions_list
+            display_sessions
+          else
+            view_chosen_session(new_session)
+          end
           return
         when '2'
           break
@@ -95,28 +101,59 @@ class Interface
     end
   end
 
+  SESSIONS_PER_PAGE = 5
+  PREV_PAGE = (SESSIONS_PER_PAGE + 1).to_s
+  NEXT_PAGE = (SESSIONS_PER_PAGE + 2).to_s
+
   def display_sessions
+    page = 0
     loop do
       puts HEADER
-      puts "\n> Viewing sessions: "
-
-      if @main.sessions.empty?
+      sessions = @main.sessions.sort_by(&:date).reverse
+      if sessions.empty?
         puts "\n> No sessions found."
-      else
-        @main.view_sessions
+        return
       end
 
-      puts "\n> Enter the name of the session to view its activities (or type 'exit' to quit):"
+      total_pages = (sessions.size.to_f / SESSIONS_PER_PAGE).ceil
+      page = page.clamp(0, total_pages - 1)
+      page_sessions = sessions.slice(page * SESSIONS_PER_PAGE, SESSIONS_PER_PAGE)
 
-      session_name = read_input
+      puts "\n> Sessions (page #{page + 1} of #{total_pages})"
+      print_sessions_table(page_sessions)
 
-      selected_session = @main.sessions.find { |s| s.name == session_name }
+      puts
+      puts "#{PREV_PAGE}. Previous page" if page.positive?
+      puts "#{NEXT_PAGE}. Next page" if page < total_pages - 1
+      puts '0. Return to main menu'
+      print "Choose a session (1-#{page_sessions.size}) or an option: "
 
-      if selected_session
-        view_chosen_session(selected_session)
+      input = read_input
+      case input
+      when '0'
+        return
+      when PREV_PAGE
+        page.positive? ? page -= 1 : puts("\n> Already on the first page.")
+      when NEXT_PAGE
+        page < total_pages - 1 ? page += 1 : puts("\n> Already on the last page.")
       else
-        puts "\n> Session not found. Please try again."
+        index = Integer(input, exception: false)
+        if index&.between?(1, page_sessions.size)
+          view_chosen_session(page_sessions[index - 1])
+        else
+          puts "\n> Invalid choice. Please try again."
+        end
       end
+    end
+  end
+
+  def print_sessions_table(sessions)
+    name_width = (['Session'] + sessions.map(&:name)).map(&:length).max
+    puts
+    puts "  #  #{'Session'.ljust(name_width)}  Date"
+    puts "  -  #{'-' * name_width}  ----------"
+    sessions.each_with_index do |session, i|
+      puts "  #{i + 1}  #{session.name.ljust(name_width)}  #{session.date.strftime('%Y-%m-%d')}"
     end
   end
 
@@ -138,7 +175,7 @@ class Interface
 
       case read_input
       when '1'
-        create_activity_flow(session)
+        break if create_activity_flow(session) == :sessions_list
       when '2'
         puts "\n> Enter the name of the activity to select:"
         activity_name = read_input
@@ -201,7 +238,8 @@ class Interface
         puts "1. Add a set to activity '#{activity.name}'"
         puts '2. Create another activity'
         puts "3. Go back to session '#{session.name}' dashboard"
-        print 'Choose an option (1-3): '
+        puts '4. Return to sessions list'
+        print 'Choose an option (1-4): '
 
         case read_input
         when '1'
@@ -210,6 +248,8 @@ class Interface
           break
         when '3'
           return
+        when '4'
+          return :sessions_list
         else
           puts "\n> Invalid choice. Please try again."
         end
@@ -261,10 +301,18 @@ class Interface
     end
   end
 
-  def get_valid_name(prompt_text)
+  def boxed(text)
+    lines = text.lines.map(&:chomp)
+    width = lines.map(&:length).max
+    border = "+#{'-' * (width + 2)}+"
+    [border, *lines.map { |line| "| #{line.ljust(width)} |" }, border].join("\n")
+  end
+
+  def get_valid_name(prompt_text, default: nil)
     loop do
       puts "\n#{prompt_text}"
       name = read_input
+      return default if name.empty? && default
 
       if name.empty?
         puts "\n> Name cannot be empty. Please try again."
@@ -286,6 +334,50 @@ class Interface
         puts "\n> Target value must be a positive integer. Please try again."
       else
         return target.to_i
+      end
+    end
+  end
+
+  def open_activity_report
+    loop do
+      puts HEADER
+      activity_names = @main.records.keys.sort_by(&:downcase)
+
+      if activity_names.empty?
+        puts "\n> No activities recorded yet. Add a set to an activity first."
+        return
+      end
+
+      puts "\n> Activities recorded:"
+      activity_names.each_with_index { |name, i| puts "#{i + 1}. #{name}" }
+      puts '0. Return to main menu'
+      print "Choose an activity (0-#{activity_names.size}): "
+
+      input = read_input
+      return if input == '0'
+
+      index = Integer(input, exception: false)
+      unless index&.between?(1, activity_names.size)
+        puts "\n> Invalid choice. Please try again."
+        next
+      end
+
+      puts
+      puts boxed(@main.create_activity_report(activity_names[index - 1]).to_s)
+
+      loop do
+        puts "\n1. View another activity report"
+        puts '2. Return to main menu'
+        print 'Choose an option (1-2): '
+
+        case read_input
+        when '1'
+          break
+        when '2'
+          return
+        else
+          puts "\n> Invalid choice. Please try again."
+        end
       end
     end
   end

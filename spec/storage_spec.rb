@@ -6,8 +6,17 @@ require 'session'
 require 'activity'
 require 'workout_set'
 require 'goal'
+require 'tmpdir'
 
 RSpec.describe Main do
+  # save/load go to a throwaway test.json so specs never touch data/tracker.json
+  around do |example|
+    Dir.mktmpdir do |dir|
+      @save_path = File.join(dir, 'test.json')
+      example.run
+    end
+  end
+
   it 'save sessions after quitting' do
     tracker = Main.new
 
@@ -23,10 +32,10 @@ RSpec.describe Main do
     session2.add_activity(squat)
     tracker.add_session(session2)
 
-    tracker.save
+    tracker.save(@save_path)
 
     tracker2 = Main.new
-    tracker2.load
+    tracker2.load(@save_path)
 
     expect(tracker2.sessions[0].name).to eq('Chest')
     expect(tracker2.sessions[0].activities[0].name).to eq('Bench press')
@@ -43,10 +52,10 @@ RSpec.describe Main do
     tracker = Main.new
     goal = Goal.new('Bench Press', 250)
     tracker.add_goal(goal)
-    tracker.save
+    tracker.save(@save_path)
 
     tracker2 = Main.new
-    tracker2.load
+    tracker2.load(@save_path)
     goal2 = tracker2.goals[0]
 
     expect(goal2.name).to eq('Bench Press')
@@ -68,10 +77,10 @@ RSpec.describe Main do
     squat.add_set(WorkoutSet.new(315, 5))
     session2.add_activity(squat)
     tracker.add_session(session2)
-    tracker.save
+    tracker.save(@save_path)
 
     tracker2 = Main.new
-    tracker2.load
+    tracker2.load(@save_path)
 
     expect(tracker2.records['Bench press']).to eq(165)
     expect(tracker2.records['Squat']).to eq(315)
@@ -85,7 +94,7 @@ RSpec.describe Main do
     bench.add_set(WorkoutSet.new(165, 5))
     session.add_activity(bench)
     tracker.add_session(session)
-    tracker.save
+    tracker.save(@save_path)
 
     # added after the save, so it should not come back
     session2 = Session.new('Legs')
@@ -95,7 +104,7 @@ RSpec.describe Main do
     tracker.add_session(session2)
 
     tracker2 = Main.new
-    tracker2.load
+    tracker2.load(@save_path)
 
     expect(tracker2.sessions[0].name).to eq('Chest')
     expect(tracker2.sessions.length).to eq(1)
