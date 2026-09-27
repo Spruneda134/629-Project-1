@@ -36,18 +36,18 @@ RSpec.describe Record do
   it 'update new record' do
     tracker = Main.new
 
-    session_1 = Session.new('Chest Day')
-    bench_1 = Activity.new('Bench press')
-    bench_1.add_set(WorkoutSet.new(165, 5))
-    session_1.add_activity(bench_1)
+    session1 = Session.new('Chest Day')
+    bench1 = Activity.new('Bench press')
+    bench1.add_set(WorkoutSet.new(165, 5))
+    session1.add_activity(bench1)
 
-    session_2 = Session.new('Chest Day 2')
-    bench_2 = Activity.new('Bench press')
-    bench_2.add_set(WorkoutSet.new(175, 5))
-    session_2.add_activity(bench_2)
+    session2 = Session.new('Chest Day 2')
+    bench2 = Activity.new('Bench press')
+    bench2.add_set(WorkoutSet.new(175, 5))
+    session2.add_activity(bench2)
 
-    tracker.add_session(session_1)
-    tracker.add_session(session_2)
+    tracker.add_session(session1)
+    tracker.add_session(session2)
 
     expect do
       tracker.view_all_records
@@ -62,11 +62,11 @@ RSpec.describe Record do
 
     tracker.add_record('Bench press', 225)
 
-    session_1 = Session.new('Chest Day')
-    bench_1 = Activity.new('Bench press')
-    bench_1.add_set(WorkoutSet.new(165, 5))
-    session_1.add_activity(bench_1)
-    tracker.add_session(session_1)
+    session1 = Session.new('Chest Day')
+    bench1 = Activity.new('Bench press')
+    bench1.add_set(WorkoutSet.new(165, 5))
+    session1.add_activity(bench1)
+    tracker.add_session(session1)
 
     expect do
       tracker.view_all_records
@@ -81,11 +81,11 @@ RSpec.describe Record do
   it 'gets personal record by activity name' do
     tracker = Main.new
 
-    session_1 = Session.new('Chest Day')
-    bench_1 = Activity.new('Bench press')
-    bench_1.add_set(WorkoutSet.new(165, 5))
-    session_1.add_activity(bench_1)
-    tracker.add_session(session_1)
+    session1 = Session.new('Chest Day')
+    bench1 = Activity.new('Bench press')
+    bench1.add_set(WorkoutSet.new(165, 5))
+    session1.add_activity(bench1)
+    tracker.add_session(session1)
 
     expect do
       tracker.view_record('Bench press')

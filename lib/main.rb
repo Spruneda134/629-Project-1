@@ -75,7 +75,7 @@ class Main
     # earliest session where the PR weight was lifted (nil if the PR was added manually)
     pr_row = history.find { |row| row[:max_weight] == pr }
 
-    Report.new(activity_name, pr, pr_row&.dig(:date), history, unit)
+    Report.new(activity_name, pr, pr_row&.dig(:date), history, unit: unit)
   end
 
   def view_activity_report(activity_name)

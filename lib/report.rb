@@ -3,13 +3,13 @@
 require 'date'
 
 class Report
-  attr_reader :activityName, :pr, :pr_date, :history, :unit
+  attr_reader :activity_name, :personal_record, :pr_date, :history, :unit
 
-  def initialize(activityName, pr = nil, pr_date = nil, history = [], unit = 'lbs')
-    raise ArgumentError, 'Activity name cannot be nil or empty' if activityName.nil? || activityName.empty?
+  def initialize(activity_name, personal_record = nil, pr_date = nil, history = [], unit: 'lbs')
+    raise ArgumentError, 'Activity name cannot be nil or empty' if activity_name.nil? || activity_name.empty?
 
-    @activityName = activityName
-    @pr = pr
+    @activity_name = activity_name
+    @personal_record = personal_record
     @pr_date = pr_date
     @history = history
     @unit = unit
@@ -23,15 +23,15 @@ class Report
   end
 
   def to_s(now = Time.now)
-    title = "#{@activityName} Report"
+    title = "#{@activity_name} Report"
     lines = [title, '-' * title.length]
 
     if @pr_date.nil?
-      lines << "PR: #{@pr} #{@unit} (added manually)"
+      lines << "PR: #{@personal_record} #{@unit} (added manually)"
       lines << 'Time since last PR: N/A'
     else
       days = days_since_pr(now)
-      lines << "PR: #{@pr} #{@unit} (set on #{format_date(@pr_date)})"
+      lines << "PR: #{@personal_record} #{@unit} (set on #{format_date(@pr_date)})"
       lines << "Time since last PR: #{days} #{days == 1 ? 'day' : 'days'}"
     end
 
@@ -45,7 +45,7 @@ class Report
     lines << "#{'-' * 10}  #{'-' * name_width}  #{'-' * weight_header.length}"
     @history.each do |row|
       weight = "#{row[:max_weight]} #{@unit}".ljust(weight_header.length)
-      marker = row[:date] == @pr_date && row[:max_weight] == @pr ? '  *PR' : ''
+      marker = row[:date] == @pr_date && row[:max_weight] == @personal_record ? '  *PR' : ''
       lines << "#{format_date(row[:date])}  #{row[:name].ljust(name_width)}  #{weight}#{marker}".rstrip
     end
 
