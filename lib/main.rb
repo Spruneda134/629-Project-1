@@ -1,14 +1,39 @@
 # frozen_string_literal: true
 
+require 'json'
+require 'fileutils'
 require_relative 'report'
+require_relative 'storage'
 
 class Main
   attr_reader :sessions, :goals, :records
+
+  SAVE_PATH = File.expand_path('../data/tracker.json', __dir__)
 
   def initialize
     @records = {}
     @goals = []
     @sessions = []
+  end
+
+  def save(path = SAVE_PATH)
+    data = {
+      sessions: @sessions.map { |session| Storage.session_to_h(session) },
+      goals: @goals.map { |goal| Storage.goal_to_h(goal) },
+      records: @records
+    }
+
+    FileUtils.mkdir_p(File.dirname(path))
+    File.write(path, JSON.pretty_generate(data))
+  end
+
+  def load(path = SAVE_PATH)
+    return unless File.exist?(path)
+
+    data = JSON.parse(File.read(path))
+    @sessions = data['sessions'].map { |session| Storage.session_from_h(session) }
+    @goals = data['goals'].map { |goal| Storage.goal_from_h(goal) }
+    @records = data['records']
   end
 
   def add_record(activity_name, weight)
