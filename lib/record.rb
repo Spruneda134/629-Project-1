@@ -2,12 +2,12 @@
 
 # One set of an activity: weight, reps and optional RPE.
 class Record
-  attr_reader :weight,
+  attr_reader :weight
 
-  def initialize(activityName, weight)
+  def initialize(activity_name, weight)
     raise ArgumentError, 'Weight cannot be negative' if weight.negative?
 
-    @activityName = activityName
+    @activity_name = activity_name
     @weight = weight
   end
 end

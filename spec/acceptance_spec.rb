@@ -22,11 +22,11 @@ RSpec.describe 'As a user, I want to add activities and sets to a session' do
     allow(main).to receive(:save)
 
     queue_console_input(interface, [
-      '1', 'Leg Day',
-      '1', 'Squats',
-      '1', '225', '10', '6',
-      'exit'
-    ])
+                          '1', 'Leg Day',
+                          '1', 'Squats',
+                          '1', '225', '10', '6',
+                          'exit'
+                        ])
 
     expect { interface.start }.to output.to_stdout
 
@@ -48,10 +48,10 @@ RSpec.describe 'As a user, I want to add activities and sets to a session' do
     allow(main).to receive(:save)
 
     queue_console_input(interface, [
-      'bad',
-      '1', 'Leg Day',
-      'exit'
-    ])
+                          'bad',
+                          '1', 'Leg Day',
+                          'exit'
+                        ])
 
     expect { interface.start }.to output.to_stdout
 
@@ -65,12 +65,12 @@ RSpec.describe 'As a user, I want to add activities and sets to a session' do
     allow(main).to receive(:save)
 
     queue_console_input(interface, [
-      '3', '1', '2',
-      '3', '', 'Bench Press', '', '0', '200', '2', '4',
-      '1', 'Chest', '1', 'Bench Press', '1', '200', '5', '',
-      '2', '3', '3',
-      '3', '1', '2', '4', '4', 'bad', '1', '0'
-    ])
+                          '3', '1', '2',
+                          '3', '', 'Bench Press', '', '0', '200', '2', '4',
+                          '1', 'Chest', '1', 'Bench Press', '1', '200', '5', '',
+                          '2', '3', '3',
+                          '3', '1', '2', '4', '4', 'bad', '1', '0'
+                        ])
 
     expect { interface.start }.to output.to_stdout
 

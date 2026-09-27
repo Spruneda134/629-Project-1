@@ -268,9 +268,10 @@ class Interface
 
       if name.empty?
         puts "\n> Name cannot be empty. Please try again."
-      else
-        return name
+        next
       end
+
+      return name
     end
   end
 
@@ -332,24 +333,23 @@ class Interface
     loop do
       puts HEADER
 
-        if @main.records.empty?
-          puts "\n> No Personal Records Found."
-        else
-          puts "\n> Viewing Personal Records:"
-          @main.view_all_records
-        end
+      if @main.records.empty?
+        puts "\n> No Personal Records Found."
+      else
+        puts "\n> Viewing Personal Records:"
+        @main.view_all_records
+      end
 
       puts "\n> Goal Tracker Menu:"
       puts '1. Return to Main Menu'
       print 'Choose an option (1): '
 
       case read_input
-        when '1'
-          break
-        else
-          puts "\n> Invalid choice. Please try again."
-        end
+      when '1'
+        break
+      else
+        puts "\n> Invalid choice. Please try again."
+      end
     end
   end
-
 end
