@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'record'
 require 'debug'
 require 'main'
 require 'session'
@@ -10,7 +9,7 @@ require 'workout_set'
 ## Happy Paths
 
 # checks that view all records match the expectation.
-RSpec.describe Record do
+RSpec.describe Main, 'personal records' do
   it 'view all records' do
     tracker = Main.new
     session = Session.new('Chest Day')
@@ -32,7 +31,7 @@ RSpec.describe Record do
 end
 
 # checks adding new activity updates the PR.
-RSpec.describe Record do
+RSpec.describe Main, 'personal records' do
   it 'update new record' do
     tracker = Main.new
 
@@ -56,7 +55,7 @@ RSpec.describe Record do
 end
 
 # Checks that manually adding new PR without activity works for those with experience.
-RSpec.describe Record do
+RSpec.describe Main, 'personal records' do
   it 'manually add record' do
     tracker = Main.new
 
@@ -77,7 +76,7 @@ end
 ## Sad Path
 # If an activity name exists, then we get the PR by name.
 # If an activity name doesn't exist then we raise an error.
-RSpec.describe Record do
+RSpec.describe Main, 'personal records' do
   it 'gets personal record by activity name' do
     tracker = Main.new
 
