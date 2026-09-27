@@ -1,4 +1,4 @@
-# 5-10 user stories
+# User stories
 1. As a user, I want to add activities to a session so I can track relevant metrics (e.g. weight lifted)
     - User Story
         - As a weight-lifter,
