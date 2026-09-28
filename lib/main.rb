@@ -37,24 +37,28 @@ class Main
     @records = data['records']
   end
 
+  # add personal records to the app
   def add_record(activity_name, weight)
     return unless !@records.key?(activity_name) || weight > @records[activity_name]
 
     @records[activity_name] = weight
   end
 
+  # view all existing personal records
   def view_all_records
     @records.each do |activity_name, record|
       puts "#{activity_name}: #{record}"
     end
   end
 
+  # view a specified record
   def view_record(activity_name)
     raise ArgumentError, 'Activity does not exist in the records.' unless @records.key?(activity_name)
 
     puts "#{activity_name}: #{@records[activity_name]}"
   end
 
+  # create an activity report that shows users statistics on the workouts they have input
   def create_activity_report(activity_name)
     raise ArgumentError, 'Activity does not exist in the records.' unless @records.key?(activity_name)
 
@@ -79,14 +83,17 @@ class Main
     Report.new(activity_name, pr, pr_row&.dig(:date), history, unit: unit)
   end
 
+  # view the activity report
   def view_activity_report(activity_name)
     puts create_activity_report(activity_name)
   end
 
+  # add a goal/milestone to the app
   def add_goal(goal)
     @goals << goal
   end
 
+  # allows a user to view the goals that they have set out
   def view_goals
     @goals.each do |goal|
       puts goal.name
@@ -94,6 +101,7 @@ class Main
     end
   end
 
+  # allows a user to view the completed goals that they have set out
   def view_completed_goals
     completed_goals = @goals.select(&:completed)
     completed_goals.each do |goal|
@@ -102,6 +110,7 @@ class Main
     end
   end
 
+  # allows a user to view the incomplete/in-progress goals that they have set out
   def view_incomplete_goals
     incomplete_goals = @goals.reject(&:completed)
     incomplete_goals.each do |goal|
@@ -110,6 +119,7 @@ class Main
     end
   end
 
+  # add a session to the app
   def add_session(session)
     raise ArgumentError, 'Name cannot be empty' if session.name.empty?
     raise ArgumentError, 'Name cannot be empty' if session.name == 'exit'
@@ -126,6 +136,7 @@ class Main
     end
   end
 
+  # view the sessions on the app
   def view_sessions
     @sessions.each do |session|
       puts session.name
