@@ -271,8 +271,8 @@ class Interface
           add_sets_to_activity(activity)
         # Create another activity
         when '2'
-        # Go back to current session's dashoard
           break
+        # Go back to current session's dashoard
         when '3'
           return
         # Return to sessions list

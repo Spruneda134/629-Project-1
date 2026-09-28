@@ -37,7 +37,7 @@ class Main
     @records = data['records']
   end
 
-  # add personal records to the app 
+  # add personal records to the app
   def add_record(activity_name, weight)
     return unless !@records.key?(activity_name) || weight > @records[activity_name]
 
@@ -101,7 +101,7 @@ class Main
     end
   end
 
-  # allows a user to view the completed goals that they have set out 
+  # allows a user to view the completed goals that they have set out
   def view_completed_goals
     completed_goals = @goals.select(&:completed)
     completed_goals.each do |goal|
@@ -110,7 +110,7 @@ class Main
     end
   end
 
-  # allows a user to view the incomplet/in-progress goals that they have set out 
+  # allows a user to view the incomplete/in-progress goals that they have set out
   def view_incomplete_goals
     incomplete_goals = @goals.reject(&:completed)
     incomplete_goals.each do |goal|
