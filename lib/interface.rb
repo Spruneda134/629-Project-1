@@ -18,9 +18,11 @@ class Interface
     @main.load
   end
 
+  # starts up app
   def start
     catch(:exit_app) do
       loop do
+        # main menu
         puts HEADER
         puts '1. Add a Session'
         puts '2. View/Edit Sessions'
@@ -32,15 +34,21 @@ class Interface
 
         case read_input
         when '1'
+          # create a new session
           add_session_menu
         when '2'
+          # opens the Sessions dashboard to view sessions and corresponding activities
           display_sessions
         when '3'
+          # view and create goals
           open_goal_tracker
         when '4'
+          # view personal records that have been set based on the activities that have been created
           open_record_tracker
         when '5'
+          # create a detailed report based on the data from the sessions/activities created
           open_activity_report
+          # exit app
         when '0'
           throw :exit_app
         else
@@ -49,6 +57,7 @@ class Interface
       end
     end
 
+    # save data
     @main.save
     puts "\n> Goodbye!"
   end
@@ -62,6 +71,7 @@ class Interface
     input
   end
 
+  # create a new session
   def add_session_menu
     loop do
       session_name = get_valid_name("> Enter Session Name (leave blank for 'Workout'): ", default: 'Workout')
@@ -83,6 +93,7 @@ class Interface
         print 'Choose an option (1-3): '
 
         case read_input
+        # Add an activity to current session
         when '1'
           if create_activity_flow(new_session) == :sessions_list
             display_sessions
@@ -90,8 +101,10 @@ class Interface
             view_chosen_session(new_session)
           end
           return
+        # Create another session
         when '2'
           break
+        # Return to main menu
         when '3'
           return
         else
@@ -101,10 +114,12 @@ class Interface
     end
   end
 
+  # pagination variables
   SESSIONS_PER_PAGE = 5
   PREV_PAGE = (SESSIONS_PER_PAGE + 1).to_s
   NEXT_PAGE = (SESSIONS_PER_PAGE + 2).to_s
 
+  # pagination
   def display_sessions
     page = 0
     loop do
@@ -147,6 +162,7 @@ class Interface
     end
   end
 
+  # user interface method for displaying sessions
   def print_sessions_table(sessions)
     name_width = (['Session'] + sessions.map(&:name)).map(&:length).max
     puts
@@ -157,6 +173,7 @@ class Interface
     end
   end
 
+  # view and add activities for the chosen session
   def view_chosen_session(session)
     loop do
       puts HEADER
@@ -174,8 +191,10 @@ class Interface
       print 'Choose an option (1-3): '
 
       case read_input
+      # Add an Activity to the current session
       when '1'
         break if create_activity_flow(session) == :sessions_list
+      # Select an Activity (View/Add Sets)
       when '2'
         puts "\n> Enter the name of the activity to select:"
         activity_name = read_input
@@ -186,6 +205,7 @@ class Interface
         else
           puts "\n> Activity not found. Please try again."
         end
+      # Return to Sessions List
       when '3'
         break
       else
@@ -194,6 +214,7 @@ class Interface
     end
   end
 
+  # view and create sets for the chosen activity
   def view_chosen_activity(activity)
     loop do
       puts HEADER
@@ -210,8 +231,10 @@ class Interface
       print 'Choose an option (1-2): '
 
       case read_input
+      # add a set to the current activity
       when '1'
         add_set_to_activity(activity)
+      # Return to Activity List
       when '2'
         break
       else
@@ -220,6 +243,7 @@ class Interface
     end
   end
 
+  # simplifies propagating sessions by being able to add activities right after creating a session
   def create_activity_flow(session)
     loop do
       activity_name = get_valid_name(" > Enter the name of the activity to add to '#{session.name}':")
@@ -242,12 +266,16 @@ class Interface
         print 'Choose an option (1-4): '
 
         case read_input
+        # Add a set to activity
         when '1'
           add_sets_to_activity(activity)
+        # Create another activity
         when '2'
+        # Go back to current session's dashoard
           break
         when '3'
           return
+        # Return to sessions list
         when '4'
           return :sessions_list
         else
@@ -257,6 +285,7 @@ class Interface
     end
   end
 
+  # add a set to an activity (main dashboard -> session -> activity -> set)
   def add_sets_to_activity(activity)
     loop do
       add_set_to_activity(activity)
@@ -277,6 +306,7 @@ class Interface
     end
   end
 
+  # add a set to an acitivity (main dashboard -> session -> activity -> set)
   def add_set_to_activity(activity)
     puts "\n> Enter weight (lbs):"
     weight = read_input.to_f
@@ -288,9 +318,11 @@ class Interface
 
     begin
       activity.add_set(WorkoutSet.new(weight, reps, rpe))
+      # checks to see if the inputed set's weight is a new Personal Record for the current activity
       @main.add_record(activity.name, weight)
       puts "\n> Set added successfully!"
 
+      # checks to see if a goal has been completed by the inputed set's weight for the current activity
       matching_goal = @main.goals.find { |goal| goal.name.downcase == activity.name.downcase }
       if matching_goal && weight >= matching_goal.target && !matching_goal.completed
         matching_goal.toggle_completed
@@ -301,6 +333,7 @@ class Interface
     end
   end
 
+  # for styling the interface
   def boxed(text)
     lines = text.lines.map(&:chomp)
     width = lines.map(&:length).max
@@ -308,6 +341,7 @@ class Interface
     [border, *lines.map { |line| "| #{line.ljust(width)} |" }, border].join("\n")
   end
 
+  # ensures the name is not empty
   def get_valid_name(prompt_text, default: nil)
     loop do
       puts "\n#{prompt_text}"
@@ -338,6 +372,7 @@ class Interface
     end
   end
 
+  # open up a report with data on the inputed activities
   def open_activity_report
     loop do
       puts HEADER
@@ -371,8 +406,10 @@ class Interface
         print 'Choose an option (1-2): '
 
         case read_input
+        # view activity reports
         when '1'
           break
+        # return to main menu
         when '2'
           return
         else
@@ -382,6 +419,7 @@ class Interface
     end
   end
 
+  # view and create goals
   def open_goal_tracker
     loop do
       puts HEADER
@@ -393,6 +431,7 @@ class Interface
       print 'Choose an option (1-3): '
 
       case read_input
+      # View Completed Goals
       when '1'
         if @main.goals.select(&:completed).empty?
           puts "\n> No completed goals found."
@@ -400,6 +439,7 @@ class Interface
           puts "\n> Viewing Completed Goals:"
           @main.view_completed_goals
         end
+      # View Incomplete/In-Progress Goals
       when '2'
         if @main.goals.reject(&:completed).empty?
           puts "\n> No on-going goals found."
@@ -407,12 +447,14 @@ class Interface
           puts "\n> Viewing In-Progress Goals:"
           @main.view_incomplete_goals
         end
+      # add a goal
       when '3'
         goal_name = get_valid_name('> Enter the name of activity you would like to set a goal for:')
 
         target_value = get_valid_target('> Enter the target weight for this goal (lbs):')
         @main.add_goal(Goal.new(goal_name, target_value))
         puts "\n> Goal '#{goal_name}' added successfully!"
+      # go back to main dashboard
       when '4'
         break
       else
@@ -421,6 +463,7 @@ class Interface
     end
   end
 
+  # menu to view personal records
   def open_record_tracker
     loop do
       puts HEADER
